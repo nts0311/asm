@@ -33,8 +33,34 @@ main:
     int 21h
     
     ;Bat dau doc 2 muc nhiet do
-      
-    jmp doc_so
+    
+doc_so:      
+    ;doc 1 ky tu
+    mov ah, 1
+    int 21h 
+    
+    ;kiem tra enter
+    cmp al, 13
+    je ket_thuc_doc_so    ; neu emter, ket thuc nhap
+    
+    ;kiem tra co phai chu so 0-9 khong
+    cmp al, '0'
+    jb doc_so ;neu ky tu < '0'
+    cmp al, '9'
+    ja doc_so ;neu ky tu > '9'
+
+    mov ah, 0
+    sub al, 48  
+    
+    mov bx, ax   
+    
+    mov ax, soVuaDoc          
+    mul coso10  
+    add ax, bx
+    
+    mov soVuaDoc, ax
+    jmp doc_so  
+    
     
 ket_thuc_doc_so:
     cmp dangDoc, 0
@@ -72,6 +98,11 @@ doc_nhiet_do_min:
 doc_nhiet_do_max: 
     cmp soVuaDoc, 100
     jae nhap_sai
+          
+    xor ah, ah             
+    mov al, nhietDoMin ; so sanh voi nhiet do min
+    cmp soVuaDoc, ax
+    jb nhap_sai        ; neu nhiet do max < nhiet do min, nhap lai
 
     mov ax, soVuaDoc
     mov nhietDoMax, al
@@ -95,34 +126,6 @@ doc_thoi_gian:
     inc dangDoc
     jmp bat_dau_bat_bep
     
-
-    
-doc_so:      
-    ;doc 1 ky tu
-    mov ah, 1
-    int 21h 
-    
-    ;kiem tra enter
-    cmp al, 13
-    je ket_thuc_doc_so    ; neu emter, ket thuc nhap
-    
-    ;kiem tra co phai chu so 0-9 khong
-    cmp al, 48
-    jb doc_so ;neu ky tu < '0'
-    cmp al, 57
-    ja doc_so ;neu ky tu > '9'
-
-    mov ah, 0
-    sub al, 48  
-    
-    mov bx, ax   
-    
-    mov ax, soVuaDoc          
-    mul coso10  
-    add ax, bx
-    
-    mov soVuaDoc, ax
-    jmp doc_so 
     
 bat_dau_bat_bep: 
 
