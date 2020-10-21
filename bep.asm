@@ -15,7 +15,7 @@
     coso10 dW 10
     dangDoc db 0
     
-    tbaoNhapNhietDo dB "Nhap vao 2 gioi han nhiet (0-100 C): $"
+    tbaoNhapNhietDo dB "Nhap vao 2 gioi han nhiet (0-120 C): $"
     tbaoNhapSai dB "Nhap sai, moi nhap lai: $"
     tbaoNhapSoPhut  dB "Nhap vao thoi gian hen gio tat bep(so phut, max 65535): $"
     newln dB 10,13,'$'
@@ -86,8 +86,8 @@ nhap_sai:
    
     
 doc_nhiet_do_min:
-    cmp soVuaDoc, 100
-    jae nhap_sai
+    cmp soVuaDoc, 120
+    ja nhap_sai
        
     mov ax, soVuaDoc
     mov nhietDoMin, al
@@ -102,8 +102,8 @@ doc_nhiet_do_min:
     
     
 doc_nhiet_do_max: 
-    cmp soVuaDoc, 100
-    jae nhap_sai
+    cmp soVuaDoc, 120
+    ja nhap_sai
           
     xor ah, ah             
     mov al, nhietDoMin ; so sanh voi nhiet do min
@@ -146,13 +146,19 @@ doc_thoi_gian:
 lap:   
   
     ;kiem tra thoi gian
-
+    ; doc thoi gian hien tai
     mov ah, 2ch 
     int 21h
+    
+    ;so sanh voi moc thoi gian da luu
     cmp phutTruoc, cl
+    
+    ;neu khac nhau tuc la da qua 1 phut, giam thoi gian xuong
     jne giam_so_phut
     
-    cmp thoiGian,0
+    
+    ;neu het het thoi gian da dat
+    cmp thoiGian,0  
     je so_sanh_giay
     
 
@@ -180,10 +186,16 @@ high:
     jmp lap 
     
 giam_so_phut:
-    dec thoiGian 
-    mov phutTruoc, cl
-    mov ax, thoiGian
-    out 199, ax
+
+    dec thoiGian
+    
+    ;cap nhap lai moc thoi gian 
+    mov phutTruoc, cl 
+    
+    ;cap nhap so phut con lai ra man hinh led
+    mov ax, thoiGian 
+    out 199, ax 
+    
     jmp kiem_tra_nhiet_do
     
     
