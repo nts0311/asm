@@ -16,6 +16,9 @@
     tbaoNhapSai dB "Nhap sai, moi nhap lai: $"
     tbaoNhapSoPhut  dB "Nhap vao thoi gian hen gio tat bep(phut, max 65535): $"
     newln dB 10,13,'$'
+    
+    phutTruoc db 0
+    giayKetThuc db 0
 
 
 .Code
@@ -129,11 +132,69 @@ doc_thoi_gian:
     
 bat_dau_bat_bep: 
 
+    mov ax, thoiGian
+    out 199, ax
+    
     mov ah, 2ch
     int 21h
+    mov phutTruoc, cl
+    mov giayKetThuc, dh
+    
+lap:   
+  
+    ;kiem tra thoi gian
+
+    mov ah, 2ch 
+    int 21h
+    cmp phutTruoc, cl
+    jne giam_so_phut
+    
+    cmp thoiGian,0
+    je so_sanh_giay
+    
+
+kiem_tra_nhiet_do:    
+    ;kiem tra nhiet do
+    in al, 125
+
+    cmp al, nhietDoMin
+    jl  low
+
+    cmp al, nhietDoMax
+    jle  lap
+    jg   high
+    
+    jmp lap
+    
+low:
+    mov al, 1
+    out 127, al   ; turn heater "on".
+    jmp lap
+
+high:
+    mov al, 0
+    out 127, al   ; turn heater "off". 
+    jmp lap 
+    
+giam_so_phut:
+    dec thoiGian 
+    mov phutTruoc, cl
+    mov ax, thoiGian
+    out 199, ax
+    jmp kiem_tra_nhiet_do
+    
+    
+so_sanh_giay:
+    cmp dh, giayKetThuc
+    je endmain
+    jmp kiem_tra_nhiet_do
+
+     
 
         
 
-endmain:
+endmain: 
+    mov al, 0
+    out 127, al
     mov ah, 4ch
     int 21h

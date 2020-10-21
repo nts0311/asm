@@ -2,11 +2,9 @@
 
 data segment
     ; add your data here!
-    pkey db "press any key...$"
-    nl db 13,10,'$'
-    soPhut dW 5
-    gioKetThuc db 0
-    phutKetThuc db 0
+
+    soPhut dW 3
+
     giayKetThuc db 0 
     
     phutDaQua dw 0
@@ -69,26 +67,30 @@ start:
 ;    je exit
 ;    jmp lap    
     
+    mov ax, soPhut
+    out 199, ax
     
     mov ah, 2ch
     int 21h
     mov phutTruoc, cl
     mov giayKetThuc, dh 
    
-lap: 
+lap:
+    mov ah, 2ch 
     int 21h
     cmp phutTruoc, cl
-    jne tang_so_phut
+    jne giam_so_phut
     
-    mov bx, soPhut
-    cmp phutDaQua,bx
-    jae so_sanh_giay
+    cmp soPhut,0
+    je so_sanh_giay
     
     jmp lap
     
-tang_so_phut:
-    inc phutDaQua 
+giam_so_phut:
+    dec soPhut 
     mov phutTruoc, cl
+    mov ax, soPhut
+    out 199, ax
     jmp lap
     
     
@@ -101,8 +103,8 @@ so_sanh_giay:
   
         
 exit:    
-    mov ax, 4c00h ; exit to operating system.
+    mov ax, 4c00h 
     int 21h    
 ends
 
-end start ; set entry point and stop the assembler.
+end start 
