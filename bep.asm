@@ -1,6 +1,9 @@
 
 ;led 199
-;bep data 125 control 127
+;bep data 125 control 127 
+
+#start=thermometer.exe#
+#start=LED_Display.exe#
 
 .Model small
 .Stack 100h
@@ -14,7 +17,7 @@
     
     tbaoNhapNhietDo dB "Nhap vao 2 gioi han nhiet (0-100 C): $"
     tbaoNhapSai dB "Nhap sai, moi nhap lai: $"
-    tbaoNhapSoPhut  dB "Nhap vao thoi gian hen gio tat bep(phut, max 65535): $"
+    tbaoNhapSoPhut  dB "Nhap vao thoi gian hen gio tat bep(so phut, max 65535): $"
     newln dB 10,13,'$'
     
     phutTruoc db 0
@@ -127,10 +130,10 @@ doc_thoi_gian:
     mov ax, soVuaDoc
     mov thoiGian, ax
     inc dangDoc
-    jmp bat_dau_bat_bep
+    ;jmp bat_dau_bat_bep
     
     
-bat_dau_bat_bep: 
+;bat_dau_bat_bep: 
 
     mov ax, thoiGian
     out 199, ax
@@ -168,12 +171,12 @@ kiem_tra_nhiet_do:
     
 low:
     mov al, 1
-    out 127, al   ; turn heater "on".
+    out 127, al   ; bat bep
     jmp lap
 
 high:
     mov al, 0
-    out 127, al   ; turn heater "off". 
+    out 127, al   ; tat bep 
     jmp lap 
     
 giam_so_phut:
