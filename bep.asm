@@ -154,13 +154,35 @@ lap:
     cmp phutTruoc, cl
     
     ;neu khac nhau tuc la da qua 1 phut, giam thoi gian xuong
-    jne giam_so_phut
+    jne so_sanh_giay
     
     
     ;neu het het thoi gian da dat
     cmp thoiGian,0  
     je so_sanh_giay
+                        
+giam_so_phut:
+
+    dec thoiGian
     
+    ;cap nhap lai moc thoi gian 
+    mov phutTruoc, cl 
+    
+    ;cap nhap so phut con lai ra man hinh led
+    mov ax, thoiGian 
+    out 199, ax       
+    
+    cmp thoiGian, 0
+    je endmain
+    
+    jmp kiem_tra_nhiet_do
+    
+    
+so_sanh_giay:
+    cmp dh, giayKetThuc
+    je giam_so_phut
+    jmp kiem_tra_nhiet_do                        
+
 
 kiem_tra_nhiet_do:    
     ;kiem tra nhiet do
@@ -184,29 +206,7 @@ high:
     mov al, 0
     out 127, al   ; tat bep 
     jmp lap 
-    
-giam_so_phut:
-
-    dec thoiGian
-    
-    ;cap nhap lai moc thoi gian 
-    mov phutTruoc, cl 
-    
-    ;cap nhap so phut con lai ra man hinh led
-    mov ax, thoiGian 
-    out 199, ax 
-    
-    jmp kiem_tra_nhiet_do
-    
-    
-so_sanh_giay:
-    cmp dh, giayKetThuc
-    je endmain
-    jmp kiem_tra_nhiet_do
-
-     
-
-        
+          
 
 endmain: 
     mov al, 0
