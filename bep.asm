@@ -130,10 +130,9 @@ doc_thoi_gian:
     mov ax, soVuaDoc
     mov thoiGian, ax
     inc dangDoc
-    ;jmp bat_dau_bat_bep
     
     
-;bat_dau_bat_bep: 
+; bat dau bat bep    
 
     mov ax, thoiGian
     out 199, ax
@@ -153,13 +152,11 @@ lap:
     ;so sanh voi moc thoi gian da luu
     cmp phutTruoc, cl
     
-    ;neu khac nhau tuc la da qua 1 phut, giam thoi gian xuong
+    ;neu khac nhau thi so sanh so giay ban dau xem da het 1 phut chua
     jne so_sanh_giay
     
     
-    ;neu het het thoi gian da dat
-    cmp thoiGian,0  
-    je so_sanh_giay
+    jmp kiem_tra_nhiet_do
                         
 giam_so_phut:
 
@@ -179,7 +176,9 @@ giam_so_phut:
     
     
 so_sanh_giay:
-    cmp dh, giayKetThuc
+    cmp dh, giayKetThuc     
+    ; neu so giay bang nhau thi da qua 1 phut, 
+    ; giam thoi gian va cap nhap ra ngoai man hinh LED
     je giam_so_phut
     jmp kiem_tra_nhiet_do                        
 
